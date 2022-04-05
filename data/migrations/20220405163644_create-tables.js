@@ -12,6 +12,8 @@ exports.up = async function(knex) {
       .createTable('recipes', tbl => {
         tbl.increments('recipe_id');
         tbl.string('recipe_name', 100).notNullable().unique()
+        tbl.string('source', 100).notNullable()
+        tbl.string('category', 100).notNullable()
     })
     .createTable('ingredients', tbl => {
         tbl.increments('ingredient_id');
@@ -21,7 +23,7 @@ exports.up = async function(knex) {
     .createTable('steps', tbl => {
         tbl.increments('step_id');
         tbl.string('step_text', 200).notNullable();
-        tbl.integer('step_number').notNullable();
+        tbl.integer('step_number').notNullable()
         tbl.integer('recipe_id')
           .unsigned()
           .notNullable()

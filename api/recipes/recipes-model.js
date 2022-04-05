@@ -10,9 +10,14 @@ async function getRecipeById(recipe_id) {
     return recipeRows
 }
 
+async function getIngredientByName(name) {
+    const ingredientRows = await db('ingredients as i')
+        .where('ingredient_name', name)
+    return ingredientRows}
+
 async function insert(userInput, location) {
     const [id] = await db(location).insert(userInput);
-    
+
     if (location === 'recipes') {
         return getRecipeById(id);
     } else {
@@ -20,4 +25,4 @@ async function insert(userInput, location) {
     }
   }
 
-module.exports = { getRecipeById, insert, getRecipes }
+module.exports = { getRecipeById, insert, getRecipes, getIngredientByName };
