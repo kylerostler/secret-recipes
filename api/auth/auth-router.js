@@ -1,15 +1,15 @@
 const router = require('express').Router();
-const { checkRegPayload, 
+const { checkUserPayload, 
         checkUsernameAvailable, 
         checkUsernameExists } 
-        = require('../middleware')
+        = require('../middleware/users-middleware')
 
 const User = require('../users/users-model')
 const bcrypt = require('bcryptjs/dist/bcrypt')
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../secrets')
 
-router.post('/register', checkRegPayload, checkUsernameAvailable, (req, res, next) => {
+router.post('/register', checkUserPayload, checkUsernameAvailable, (req, res, next) => {
   const { username, password } = req.body
   const hash = bcrypt.hashSync(password, 8)
   User.insert({ username, password: hash })
@@ -19,7 +19,7 @@ router.post('/register', checkRegPayload, checkUsernameAvailable, (req, res, nex
     .catch(next)
 });
 
-router.post('/login', checkRegPayload, checkUsernameExists, (req, res, next) => {
+router.post('/login', checkUserPayload, checkUsernameExists, (req, res, next) => {
       if (bcrypt.compareSync(req.body.password, req.user.password) ) {
         const token = buildToken(req.user)
         res.json({

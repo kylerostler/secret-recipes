@@ -17,7 +17,7 @@ const restricted = (req, res, next) => {
         })
   };
   
-  const checkRegPayload = (req, res, next) => {
+  const checkUserPayload = (req, res, next) => {
     if (!req.body.username || !req.body.password) {
       next({ status: 422, message: 'username and password required'})
     } else {
@@ -53,4 +53,4 @@ const restricted = (req, res, next) => {
     }
   }
   
-module.exports = { restricted, checkRegPayload, checkUsernameAvailable, checkUsernameExists }
+module.exports = { restricted, checkUserPayload, checkUsernameAvailable, checkUsernameExists }
