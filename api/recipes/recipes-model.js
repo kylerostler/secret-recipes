@@ -12,8 +12,10 @@ async function getRecipeById(recipe_id) {
 
 async function getIngredientByName(name) {
     const ingredientRows = await db('ingredients as i')
-        .where('ingredient_name', name)
-    return ingredientRows}
+        .select('i.ingredient_id')
+        .where('i.ingredient_name', name)
+    return ingredientRows
+}
 
 async function insert(userInput, location) {
     const [id] = await db(location).insert(userInput);

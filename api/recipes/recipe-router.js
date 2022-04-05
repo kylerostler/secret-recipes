@@ -28,6 +28,7 @@ router.post('/', (req, res, next) => {
       .catch(next)
   });
 
+
 router.post('/ingredients', (req, res, next) => {
     const { ingredient_name, ingredient_unit } = req.body
 
@@ -38,8 +39,17 @@ router.post('/ingredients', (req, res, next) => {
       .catch(next)
 })
 
-router.post('/steps', (req, res, next) => {
-    const { step_text, step_number, recipe_id } = req.body
+// router.get('/ingredients/:ingredient_id', (req, res, next) => {
+//     Recipe.getIngredientById(req.params.ingredient_id)
+//         .then(ingredient => {
+//             res.status(200).json(ingredient)
+//         })
+//         .catch(next)
+// })
+
+router.post('/steps', async (req, res, next) => {
+    const { step_text, step_number, recipe_id, ingredient_name, quantity } = req.body
+    const ingredient_id = await Recipe.getIngredientByName(ingredient_name)
 
     Recipe.insert({ step_text, step_number, recipe_id }, 'steps')
       .then(newStep => {
