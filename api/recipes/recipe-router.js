@@ -56,7 +56,9 @@ router.post('/steps', async (req, res, next) => {
         res.status(201).json(newStep)
       })
       .catch(next)
-})
+}) // need to fix so that the step_ingredients table updates when a step is submitted
+
+//need to add endpoints to update the recipes/steps
   
 router.use((err, req, res, next) => { // eslint-disable-line
     res.status(500).json({

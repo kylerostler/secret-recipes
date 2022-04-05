@@ -17,6 +17,6 @@ const restricted = (req, res, next) => {
     })
 };
 
-
+//need to flush out middleware for posts and update requests
 
 module.exports = { restricted }

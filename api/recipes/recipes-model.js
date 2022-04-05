@@ -17,6 +17,8 @@ async function getIngredientByName(name) {
     return ingredientRows
 }
 
+// async function getStepById()
+
 async function insert(userInput, location) {
     const [id] = await db(location).insert(userInput);
 
