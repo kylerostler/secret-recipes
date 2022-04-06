@@ -30,8 +30,8 @@ exports.up = async function(knex) {
           .notNullable()
           .references('recipe_id')
           .inTable('recipes')
-          .onDelete('RESTRICT')
-          .onUpdate('RESTRICT')
+          .onDelete('CASCADE')
+          .onUpdate('CASCADE')
     })
     .createTable('step_ingredients', tbl => {
         tbl.increments('step_ingredient_id')

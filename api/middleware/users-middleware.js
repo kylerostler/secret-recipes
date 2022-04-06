@@ -19,7 +19,8 @@ const restricted = (req, res, next) => {
               req.decodedJwt = decodedJwt;
               next();
             }
-          });
+          })
+          .catch(next);
       }
     })
   } else {

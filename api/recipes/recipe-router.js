@@ -36,6 +36,14 @@ router.put('/:recipe_id', restricted, checkRecipeId, checkRecipePayload, (req, r
       .catch(next)
 })
 
+router.delete('/:recipe_id', restricted, checkRecipeId, (req, res, next) => {
+  Recipe.removeRecipe(req.params.recipe_id)
+    .then(() => {
+      res.status(200).json({ message: 'the recipe was removed'})
+    })
+    .catch(next)
+})
+
 router.post('/ingredients', restricted, checkIngredientPayload, (req, res, next) => {
     const { ingredient_name, ingredient_unit } = req.body
 
@@ -71,7 +79,7 @@ router.put('/steps/:step_id', restricted, checkStepPayload, (req, res, next) => 
       })
       .catch(next)
 }) // need to fix so that the step_ingredients table updates when a step is submitted
-  
+
 router.use((err, req, res, next) => { // eslint-disable-line
     res.status(500).json({
         custom: 'something went wrong inside recipes-router',

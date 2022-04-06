@@ -12,14 +12,15 @@ const restricted = (req, res, next) => {
       } else {
         User.findById(decodedJwt.subject)
           .then(user => {
-            if(user.logged_out_time > decodedJwt.iat) {
+            if(user.logged_out_time > decodedJwt.iat || user.logged_out_time == undefined) {
               next({ status: 401, message: 'user was logged out' });
             } else {
               console.log(decodedJwt);
               req.decodedJwt = decodedJwt;
               next();
             }
-          });
+          })
+          .catch(next);
       }
     })
   } else {

@@ -45,6 +45,12 @@ async function insert(userInput, location) {
     }
   }
 
+function removeRecipe(recipe_id) {
+    return db('recipes')
+        .where({ recipe_id })
+        .del()
+}
+
 module.exports = { 
     getRecipeById, 
     insert, 
@@ -52,4 +58,5 @@ module.exports = {
      getIngredientByName, 
      updateRecipe, 
      updateIngredient,
-    updateStep };
+    updateStep,
+    removeRecipe };
