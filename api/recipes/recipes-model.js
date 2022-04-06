@@ -17,9 +17,9 @@ async function getIngredientByName(name) {
     return ingredientRows
 }
 
-function update(location, id, changes) {
-    return db(location)
-        .where({ id })
+function updateRecipe(recipe_id, changes) {
+    return db('recipes')
+        .where({ recipe_id })
         .update(changes, '*')
 }
 
@@ -33,4 +33,4 @@ async function insert(userInput, location) {
     }
   }
 
-module.exports = { getRecipeById, insert, getRecipes, getIngredientByName, update };
+module.exports = { getRecipeById, insert, getRecipes, getIngredientByName, updateRecipe };
