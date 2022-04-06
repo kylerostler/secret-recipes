@@ -18,13 +18,13 @@ const restricted = (req, res, next) => {
 };
 
 const checkRecipeId = (req, res, next) => {
-  getRecipeById(req.params.id)
+  getRecipeById(req.params.recipe_id)
     .then(recipe => {
       if (recipe) {
         req.recipe = recipe
         next()
       } else {
-        next({ status: 404, message: `recipe at ${req.params.id} not found`})
+        next({ status: 404, message: `recipe not found`})
       }
     })
     .catch(next)
@@ -47,7 +47,7 @@ const checkIngredientPayload = (req, res, next) => {
 }
 
 const checkStepPayload = (req, res, next) => {
-  if (!req.body.step_text || !req.body.step_number || typeof req.body.step_number != Number || !req.body.recipe_id) {
+  if (!req.body.step_text || !req.body.step_number || !req.body.recipe_id) {
     next({ status: 422, message: 'step information required'})
   } else {
     next()

@@ -17,9 +17,21 @@ async function getIngredientByName(name) {
     return ingredientRows
 }
 
-function updateRecipe(recipe_id, changes) {
+function updateRecipe( recipe_id, changes) {
     return db('recipes')
         .where({ recipe_id })
+        .update(changes, '*')
+}
+
+function updateIngredient( ingredient_id, changes) {
+    return db('ingredients')
+        .where({ ingredient_id })
+        .update(changes, '*')
+}
+
+function updateStep( step_id, changes) {
+    return db('steps')
+        .where({ step_id })
         .update(changes, '*')
 }
 
@@ -33,4 +45,11 @@ async function insert(userInput, location) {
     }
   }
 
-module.exports = { getRecipeById, insert, getRecipes, getIngredientByName, updateRecipe };
+module.exports = { 
+    getRecipeById, 
+    insert, 
+    getRecipes,
+     getIngredientByName, 
+     updateRecipe, 
+     updateIngredient,
+    updateStep };
