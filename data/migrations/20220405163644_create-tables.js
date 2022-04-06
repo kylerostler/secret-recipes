@@ -11,7 +11,7 @@ exports.up = async function(knex) {
         users.integer('logged_out_time')
       })
       .createTable('recipes', tbl => {
-        tbl.increments('recipe_id');
+        tbl.increments('recipe_id')
         tbl.string('recipe_name', 100).notNullable().unique()
         tbl.string('source', 100).notNullable()
         tbl.string('category', 100).notNullable()
@@ -41,15 +41,15 @@ exports.up = async function(knex) {
         .notNullable()
         .references('step_id')
         .inTable('steps')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
         tbl.integer('ingredient_id')
         .unsigned()
         .notNullable()
         .references('ingredient_id')
         .inTable('ingredients')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
     })
 };
 
