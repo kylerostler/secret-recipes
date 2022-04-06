@@ -51,6 +51,18 @@ function removeRecipe(recipe_id) {
         .del()
 }
 
+function removeIngredient(ingredient_id) {
+    return db('ingredients')
+        .where({ ingredient_id })
+        .del()
+}
+
+function removeStep(step_id) {
+    return db('steps')
+        .where({ step_id })
+        .del()
+}
+
 module.exports = { 
     getRecipeById, 
     insert, 
@@ -59,4 +71,6 @@ module.exports = {
      updateRecipe, 
      updateIngredient,
     updateStep,
-    removeRecipe };
+    removeRecipe,
+    removeIngredient,
+    removeStep };
