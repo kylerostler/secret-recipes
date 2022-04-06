@@ -2,20 +2,20 @@ const { JWT_SECRET } = require('../secrets')
 const jwt = require('jsonwebtoken')
 const { findBy } = require('../users/users-model')
 
-const restricted = (req, res, next) => {
-        const token = req.headers.authorization
-        if (!token) {
-         return next({ status: 401, message: 'token required'})
-        } 
-        jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
-         if (err) {
-           next({ status: 401, message: 'token invalid'})
-         } else {
-           req.decodedToken = decodedToken
-           next()
-         }
-        })
-  };
+// const restricted = (req, res, next) => {
+//         const token = req.headers.authorization
+//         if (!token) {
+//          return next({ status: 401, message: 'token required'})
+//         } 
+//         jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
+//          if (err) {
+//            next({ status: 401, message: 'token invalid'})
+//          } else {
+//            req.decodedToken = decodedToken
+//            next()
+//          }
+//         })
+//   };
   
   const checkUserPayload = (req, res, next) => {
     if (!req.body.username || !req.body.password) {
@@ -53,4 +53,4 @@ const restricted = (req, res, next) => {
     }
   }
   
-module.exports = { restricted, checkUserPayload, checkUsernameAvailable, checkUsernameExists }
+module.exports = { checkUserPayload, checkUsernameAvailable, checkUsernameExists }

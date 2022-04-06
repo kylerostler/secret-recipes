@@ -1,8 +1,8 @@
 const router = require('express').Router()
 const Recipe = require('./recipes-model')
-const { restricted } = require('../middleware/recipes-middleware')
+const { restricted, checkRecipePayload, checkIngredientPayload, checkStepPayload, checkRecipeId } = require('../middleware/recipes-middleware')
 
-router.get('/', (req, res, next) => {
+router.get('/', restricted, (req, res, next) => {
     Recipe.getRecipes()
         .then(recipes => {
             res.status(200).json(recipes)
@@ -10,15 +10,15 @@ router.get('/', (req, res, next) => {
         .catch(next)
 })
 
-router.get('/:recipe_id', (req, res, next) => {
-    Recipe.getRecipeById(req.params.recipe_id)
+router.get('/:id', restricted, (req, res, next) => {
+    Recipe.getRecipeById(req.params.id)
         .then(recipe => {
             res.status(200).json(recipe)
         })
         .catch(next)
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', restricted, checkRecipePayload, (req, res, next) => {
     const { recipe_name, source, category } = req.body
     
     Recipe.insert({ recipe_name, source, category }, 'recipes')
@@ -28,8 +28,15 @@ router.post('/', (req, res, next) => {
       .catch(next)
   });
 
+router.put('/:recipe_id', checkRecipeId, (req, res, next) => {
+    Recipe.update( 'recipes', req.params.id, req.body)
+      .then(recipe => {
+        res.status(200).json(recipe)
+      })
+      .catch(next)
+})
 
-router.post('/ingredients', (req, res, next) => {
+router.post('/ingredients', restricted, checkIngredientPayload, (req, res, next) => {
     const { ingredient_name, ingredient_unit } = req.body
 
     Recipe.insert({ ingredient_name, ingredient_unit }, 'ingredients')
@@ -47,7 +54,7 @@ router.post('/ingredients', (req, res, next) => {
 //         .catch(next)
 // })
 
-router.post('/steps', async (req, res, next) => {
+router.post('/steps', restricted, checkStepPayload, async (req, res, next) => {
     const { step_text, step_number, recipe_id, ingredient_name, quantity } = req.body
     const ingredient_id = await Recipe.getIngredientByName(ingredient_name)
 

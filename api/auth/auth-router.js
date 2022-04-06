@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { checkUserPayload, 
         checkUsernameAvailable, 
-        checkUsernameExists } 
+        checkUsernameExists, } 
         = require('../middleware/users-middleware')
 
 const User = require('../users/users-model')

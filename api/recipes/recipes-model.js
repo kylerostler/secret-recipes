@@ -17,7 +17,11 @@ async function getIngredientByName(name) {
     return ingredientRows
 }
 
-// async function getStepById()
+function update(location, id, changes) {
+    return db(location)
+        .where({ id })
+        .update(changes, '*')
+}
 
 async function insert(userInput, location) {
     const [id] = await db(location).insert(userInput);
@@ -29,4 +33,4 @@ async function insert(userInput, location) {
     }
   }
 
-module.exports = { getRecipeById, insert, getRecipes, getIngredientByName };
+module.exports = { getRecipeById, insert, getRecipes, getIngredientByName, update };
