@@ -1,4 +1,4 @@
-const { getRecipeById, getRecipes, insert } = require('../recipes/recipes-model')
+const { getRecipeById } = require('../recipes/recipes-model')
 const { JWT_SECRET } = require('../secrets')
 const jwt = require('jsonwebtoken')
 
