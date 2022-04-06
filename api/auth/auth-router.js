@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const { checkUserPayload, 
         checkUsernameAvailable, 
-        checkUsernameExists, } 
+        checkUsernameExists,
+        restricted } 
         = require('../middleware/users-middleware')
-
 const User = require('../users/users-model')
 const bcrypt = require('bcryptjs/dist/bcrypt')
 const jwt = require('jsonwebtoken')
@@ -30,6 +30,12 @@ router.post('/login', checkUserPayload, checkUsernameExists, (req, res, next) =>
         next({ status: 401, message: 'invalid credentials'})
       }
 });
+
+router.get('/logout', restricted, async (req, res, next) => {
+  const logged_out_time = Math.floor(new Date().getTime()/1000);
+  await User.update(req.decodedJwt.subject, { logged_out_time });
+  res.json('successfully logged out');
+})
 
 function buildToken(user) {
   const payload = {

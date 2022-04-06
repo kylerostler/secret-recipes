@@ -8,6 +8,7 @@ exports.up = async function(knex) {
         users.increments();
         users.string('username', 255).notNullable().unique();
         users.string('password', 255).notNullable();
+        users.integer('logged_out_time')
       })
       .createTable('recipes', tbl => {
         tbl.increments('recipe_id');

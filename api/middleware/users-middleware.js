@@ -1,21 +1,31 @@
 const { JWT_SECRET } = require('../secrets')
 const jwt = require('jsonwebtoken')
 const { findBy } = require('../users/users-model')
+const User = require('../users/users-model')
 
-// const restricted = (req, res, next) => {
-//         const token = req.headers.authorization
-//         if (!token) {
-//          return next({ status: 401, message: 'token required'})
-//         } 
-//         jwt.verify(token, JWT_SECRET, (err, decodedToken) => {
-//          if (err) {
-//            next({ status: 401, message: 'token invalid'})
-//          } else {
-//            req.decodedToken = decodedToken
-//            next()
-//          }
-//         })
-//   };
+const restricted = (req, res, next) => {
+  const token = req.headers.authorization;
+  if(token) {
+    jwt.verify(token, JWT_SECRET, (err, decodedJwt) => {
+      if(err) {
+        next({ status: 401, message: 'invalid token' });
+      } else {
+        User.findById(decodedJwt.subject)
+          .then(user => {
+            if(user.logged_out_time > decodedJwt.iat) {
+              next({ status: 401, message: 'user was logged out' });
+            } else {
+              console.log(decodedJwt);
+              req.decodedJwt = decodedJwt;
+              next();
+            }
+          });
+      }
+    })
+  } else {
+    next({ status: 401, message: 'this endpoint is restricted!' });
+  }
+}
   
   const checkUserPayload = (req, res, next) => {
     if (!req.body.username || !req.body.password) {
@@ -53,4 +63,4 @@ const { findBy } = require('../users/users-model')
     }
   }
   
-module.exports = { checkUserPayload, checkUsernameAvailable, checkUsernameExists }
+module.exports = { checkUserPayload, checkUsernameAvailable, checkUsernameExists, restricted }
