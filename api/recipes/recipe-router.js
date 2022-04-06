@@ -10,8 +10,8 @@ router.get('/', restricted, (req, res, next) => {
         .catch(next)
 })
 
-router.get('/:id', checkRecipeId, (req, res, next) => {
-    Recipe.getRecipeById(req.params.id)
+router.get('/:recipe_id', restricted, checkRecipeId, (req, res, next) => {
+    Recipe.getRecipeById(req.params.recipe_id)
         .then(recipe => {
             res.status(200).json(recipe)
         })
@@ -28,10 +28,10 @@ router.post('/', restricted, checkRecipePayload, (req, res, next) => {
       .catch(next)
   });
 
-router.put('/:recipe_id', checkRecipeId, checkRecipePayload, (req, res, next) => {
+router.put('/:recipe_id', restricted, checkRecipeId, checkRecipePayload, (req, res, next) => {
     Recipe.updateRecipe( req.params.recipe_id , req.body )
       .then(recipe => {
-        res.status(200).json(recipe)
+        res.status(200).json({recipe, message: `recipe at ${req.params.recipe_id} was changed`})
       })
       .catch(next)
 })
@@ -46,16 +46,15 @@ router.post('/ingredients', restricted, checkIngredientPayload, (req, res, next)
       .catch(next)
 })
 
-router.put('/ingredients/:ingredient_id', checkIngredientPayload, (req, res, next) => {
+router.put('/ingredients/:ingredient_id', restricted, checkIngredientPayload, (req, res, next) => {
     Recipe.updateIngredient( req.params.ingredient_id , req.body )
       .then(ingredient => {
-        res.status(200).json(ingredient)
+        res.status(200).json({ingredient, message: `ingredient at ${req.params.ingredient_id} was changed`})
       })
       .catch(next)
 })
 
-
-router.post('/steps', restricted, checkStepPayload, async (req, res, next) => {
+router.post('/steps', restricted, checkStepPayload, (req, res, next) => {
     const { step_text, step_number, recipe_id } = req.body
 
     Recipe.insert({ step_text, step_number, recipe_id }, 'steps')
@@ -65,13 +64,13 @@ router.post('/steps', restricted, checkStepPayload, async (req, res, next) => {
       .catch(next)
 }) // need to fix so that the step_ingredients table updates when a step is submitted
 
-router.put('/steps/:step_id', checkStepPayload, (req, res, next) => {
+router.put('/steps/:step_id', restricted, checkStepPayload, (req, res, next) => {
     Recipe.updateStep( req.params.step_id , req.body )
       .then(step => {
-        res.status(200).json(step)
+        res.status(200).json({step, message: `step #${req.body.step_number} on recipe #${req.body.recipe_id} was changed`})
       })
       .catch(next)
-})
+}) // need to fix so that the step_ingredients table updates when a step is submitted
   
 router.use((err, req, res, next) => { // eslint-disable-line
     res.status(500).json({
