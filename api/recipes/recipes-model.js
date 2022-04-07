@@ -10,6 +10,12 @@ async function getRecipeById(recipe_id) {
     return recipeRows
 }
 
+async function getById(location, idType, id) {
+    const recipeRows = await db(location)
+        .where(idType, id)
+    return recipeRows
+}
+
 async function getIngredientByName(name) {
     const ingredientRows = await db('ingredients as i')
         .select('i.ingredient_id')
@@ -17,21 +23,9 @@ async function getIngredientByName(name) {
     return ingredientRows
 }
 
-function updateRecipe( recipe_id, changes) {
-    return db('recipes')
-        .where({ recipe_id })
-        .update(changes, '*')
-}
-
-function updateIngredient( ingredient_id, changes) {
-    return db('ingredients')
-        .where({ ingredient_id })
-        .update(changes, '*')
-}
-
-function updateStep( step_id, changes) {
-    return db('steps')
-        .where({ step_id })
+function update(location, idType, id, changes) {
+    return db(location)
+        .where(idType, id)
         .update(changes, '*')
 }
 
@@ -45,32 +39,18 @@ async function insert(userInput, location) {
     }
   }
 
-function removeRecipe(recipe_id) {
-    return db('recipes')
-        .where({ recipe_id })
+function remove(location, idType, id) {
+    return db(location)
+        .where(idType, id)
         .del()
 }
 
-function removeIngredient(ingredient_id) {
-    return db('ingredients')
-        .where({ ingredient_id })
-        .del()
-}
-
-function removeStep(step_id) {
-    return db('steps')
-        .where({ step_id })
-        .del()
-}
 
 module.exports = { 
     getRecipeById, 
     insert, 
     getDb,
-     getIngredientByName, 
-     updateRecipe, 
-     updateIngredient,
-    updateStep,
-    removeRecipe,
-    removeIngredient,
-    removeStep };
+    getById,
+    update,
+     getIngredientByName,
+     remove };

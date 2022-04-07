@@ -10,14 +10,6 @@ router.get('/', restricted, (req, res, next) => {
         .catch(next)
 })
 
-router.get('/steps', restricted, (req, res, next) => {
-  Recipe.getDb('steps')
-      .then(recipes => {
-          res.status(200).json(recipes)
-      })
-      .catch(next)
-})
-
 router.get('/ingredients', restricted, (req, res, next) => {
   Recipe.getDb('ingredients')
        .then(ingredients => {
@@ -26,12 +18,36 @@ router.get('/ingredients', restricted, (req, res, next) => {
        .catch(next)
  })
 
+router.get('/steps', restricted, (req, res, next) => {
+  Recipe.getDb('steps')
+      .then(recipes => {
+          res.status(200).json(recipes)
+      })
+      .catch(next)
+})
+
 router.get('/:recipe_id', restricted, checkRecipeId, (req, res, next) => {
-    Recipe.getRecipeById(req.params.recipe_id)
+    Recipe.getById('recipes', 'recipe_id', req.params.recipe_id)
         .then(recipe => {
             res.status(200).json(recipe)
         })
         .catch(next)
+})
+
+router.get('/ingredients/:ingredient_id', restricted, (req, res, next) => {
+  Recipe.getById('ingredients', 'ingredient_id', req.params.ingredient_id)
+      .then(ingredient => {
+          res.status(200).json(ingredient)
+      })
+      .catch(next)
+})
+
+router.get('/steps/:step_id', restricted, (req, res, next) => {
+  Recipe.getById('steps', 'step_id', req.params.step_id)
+      .then(step => {
+          res.status(200).json(step)
+      })
+      .catch(next)
 })
 
 router.post('/', restricted, checkRecipePayload, (req, res, next) => {
@@ -45,7 +61,7 @@ router.post('/', restricted, checkRecipePayload, (req, res, next) => {
   });
 
 router.put('/:recipe_id', restricted, checkRecipeId, checkRecipePayload, (req, res, next) => {
-    Recipe.updateRecipe( req.params.recipe_id , req.body )
+    Recipe.update( 'recipes', 'recipe_id', req.params.recipe_id , req.body )
       .then(recipe => {
         res.status(200).json({recipe, message: `recipe at ${req.params.recipe_id} was changed`})
       })
@@ -53,7 +69,7 @@ router.put('/:recipe_id', restricted, checkRecipeId, checkRecipePayload, (req, r
 })
 
 router.delete('/:recipe_id', restricted, checkRecipeId, (req, res, next) => {
-  Recipe.removeRecipe(req.params.recipe_id)
+  Recipe.remove('recipes', 'recipe_id', req.params.recipe_id)
     .then(() => {
       res.status(200).json({ message: 'the recipe was removed'})
     })
@@ -71,7 +87,7 @@ router.post('/ingredients', restricted, checkIngredientPayload, (req, res, next)
 })
 
 router.delete('/ingredients/:ingredient_id', restricted, (req, res, next) => {
-  Recipe.removeIngredient(req.params.ingredient_id)
+  Recipe.remove('ingredients', 'ingredient_id', req.params.ingredient_id)
     .then(() => {
       res.status(200).json({ message: 'the ingredient was removed'})
     })
@@ -79,7 +95,7 @@ router.delete('/ingredients/:ingredient_id', restricted, (req, res, next) => {
 })
 
 router.put('/ingredients/:ingredient_id', restricted, checkIngredientPayload, (req, res, next) => {
-    Recipe.updateIngredient( req.params.ingredient_id , req.body )
+    Recipe.update( 'ingredients', 'ingredient_id', req.params.ingredient_id , req.body )
       .then(ingredient => {
         res.status(200).json({ingredient, message: `ingredient at ${req.params.ingredient_id} was changed`})
       })
@@ -98,7 +114,7 @@ router.post('/steps', restricted, checkStepPayload, (req, res, next) => {
 })
 
 router.put('/steps/:step_id', restricted, checkStepPayload, (req, res, next) => {
-    Recipe.updateStep( req.params.step_id , req.body )
+    Recipe.update('steps', 'step_id', req.params.step_id , req.body )
       .then(step => {
         res.status(200).json({step, message: `step #${req.body.step_number} on recipe #${req.body.recipe_id} was changed`})
       })
@@ -106,7 +122,7 @@ router.put('/steps/:step_id', restricted, checkStepPayload, (req, res, next) => 
 }) 
 
 router.delete('/steps/:step_id', restricted, (req, res, next) => {
-  Recipe.removeStep(req.params.step_id)
+  Recipe.remove('steps', 'step_id', req.params.step_id)
     .then(() => {
       res.status(200).json({ message: 'the step was removed'})
     })
