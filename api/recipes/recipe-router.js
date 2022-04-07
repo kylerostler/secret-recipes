@@ -10,6 +10,22 @@ router.get('/', restricted, (req, res, next) => {
         .catch(next)
 })
 
+router.get('/steps', restricted, (req, res, next) => {
+  Recipe.getDb('steps')
+      .then(recipes => {
+          res.status(200).json(recipes)
+      })
+      .catch(next)
+})
+
+router.get('/ingredients', restricted, (req, res, next) => {
+  Recipe.getDb('ingredients')
+       .then(ingredients => {
+           res.status(200).json(ingredients)
+       })
+       .catch(next)
+ })
+
 router.get('/:recipe_id', restricted, checkRecipeId, (req, res, next) => {
     Recipe.getRecipeById(req.params.recipe_id)
         .then(recipe => {
@@ -44,14 +60,6 @@ router.delete('/:recipe_id', restricted, checkRecipeId, (req, res, next) => {
     .catch(next)
 })
 
-router.get('/ingredients', restricted, (req, res, next) => {
- Recipe.getDb('ingredients')
-      .then(ingredients => {
-          res.status(200).json(ingredients)
-      })
-      .catch(next)
-})
-
 router.post('/ingredients', restricted, checkIngredientPayload, (req, res, next) => {
     const { ingredient_name, ingredient_unit } = req.body
 
@@ -78,13 +86,6 @@ router.put('/ingredients/:ingredient_id', restricted, checkIngredientPayload, (r
       .catch(next)
 })
 
-router.get('/steps', restricted, (req, res, next) => {
-  Recipe.getDb('steps')
-      .then(recipes => {
-          res.status(200).json(recipes)
-      })
-      .catch(next)
-})
 
 router.post('/steps', restricted, checkStepPayload, (req, res, next) => {
     const { step_text, step_number, recipe_id } = req.body
@@ -94,7 +95,7 @@ router.post('/steps', restricted, checkStepPayload, (req, res, next) => {
         res.status(201).json(newStep)
       })
       .catch(next)
-}) // need to fix so that the step_ingredients table updates when a step is submitted
+})
 
 router.put('/steps/:step_id', restricted, checkStepPayload, (req, res, next) => {
     Recipe.updateStep( req.params.step_id , req.body )
@@ -102,7 +103,7 @@ router.put('/steps/:step_id', restricted, checkStepPayload, (req, res, next) => 
         res.status(200).json({step, message: `step #${req.body.step_number} on recipe #${req.body.recipe_id} was changed`})
       })
       .catch(next)
-}) // need to fix so that the step_ingredients table updates when a step is submitted
+}) 
 
 router.delete('/steps/:step_id', restricted, (req, res, next) => {
   Recipe.removeStep(req.params.step_id)
