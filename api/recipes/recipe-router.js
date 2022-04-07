@@ -3,7 +3,7 @@ const Recipe = require('./recipes-model')
 const { restricted, checkRecipePayload, checkIngredientPayload, checkStepPayload, checkRecipeId } = require('../middleware/recipes-middleware')
 
 router.get('/', restricted, (req, res, next) => {
-    Recipe.getRecipes()
+    Recipe.getDb('recipes')
         .then(recipes => {
             res.status(200).json(recipes)
         })
@@ -44,6 +44,14 @@ router.delete('/:recipe_id', restricted, checkRecipeId, (req, res, next) => {
     .catch(next)
 })
 
+router.get('/ingredients', restricted, (req, res, next) => {
+ Recipe.getDb('ingredients')
+      .then(ingredients => {
+          res.status(200).json(ingredients)
+      })
+      .catch(next)
+})
+
 router.post('/ingredients', restricted, checkIngredientPayload, (req, res, next) => {
     const { ingredient_name, ingredient_unit } = req.body
 
@@ -66,6 +74,14 @@ router.put('/ingredients/:ingredient_id', restricted, checkIngredientPayload, (r
     Recipe.updateIngredient( req.params.ingredient_id , req.body )
       .then(ingredient => {
         res.status(200).json({ingredient, message: `ingredient at ${req.params.ingredient_id} was changed`})
+      })
+      .catch(next)
+})
+
+router.get('/steps', restricted, (req, res, next) => {
+  Recipe.getDb('steps')
+      .then(recipes => {
+          res.status(200).json(recipes)
       })
       .catch(next)
 })

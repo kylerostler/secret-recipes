@@ -1,7 +1,7 @@
 const db = require('../../data/dbConfig')
 
-function getRecipes() {
-    return db('recipes')
+ function getDb(location) {
+    return db(location)
 }
 
 async function getRecipeById(recipe_id) {
@@ -66,7 +66,7 @@ function removeStep(step_id) {
 module.exports = { 
     getRecipeById, 
     insert, 
-    getRecipes,
+    getDb,
      getIngredientByName, 
      updateRecipe, 
      updateIngredient,
