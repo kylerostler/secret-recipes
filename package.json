@@ -16,6 +16,10 @@
     "type": "git",
     "url": "git+https://github.com/kylerostler/secret-recipes.git"
   },
+  "engines": {
+    "node": "14.18.1"
+  }
+  ,
   "dependencies": {
     "@vscode/sqlite3": "^5.0.8",
     "bcryptjs": "^2.4.3",
