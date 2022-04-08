@@ -42,7 +42,7 @@ router.get('/ingredients/:ingredient_id', restricted, (req, res, next) => {
       .catch(next)
 })
 
-router.get('/steps/:step_id', restricted, (req, res, next) => {
+router.get('/steps/:step_id', restricted, checkRecipeId, (req, res, next) => {
   Recipe.getById('steps', 'step_id', req.params.step_id)
       .then(step => {
           res.status(200).json(step)

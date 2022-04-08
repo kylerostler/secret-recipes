@@ -1,4 +1,4 @@
-const { getRecipeById } = require('../recipes/recipes-model')
+const Recipe = require('../recipes/recipes-model')
 const { JWT_SECRET } = require('../secrets')
 const jwt = require('jsonwebtoken')
 const User = require('../users/users-model')
@@ -29,7 +29,7 @@ const restricted = (req, res, next) => {
 }
 
 const checkRecipeId = (req, res, next) => {
-  getRecipeById(req.params.recipe_id)
+  Recipe.getById('recipes', 'recipe_id', req.params.recipe_id)
     .then(recipe => {
       if (recipe) {
         req.recipe = recipe
@@ -64,7 +64,6 @@ const checkStepPayload = (req, res, next) => {
     next()
   }
 }
-//need to flush out middleware for posts and update requests
 
 module.exports = { 
   restricted, 
